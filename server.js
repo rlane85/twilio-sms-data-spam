@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 DarkSkyApi = require('dark-sky-api');
 const config = require('./config');
 const request = require('request');
-DarkSkyApi.apiKey = config.DARKSKY_KEY;
+DarkSkyApi.apiKey = process.env.DARKSKY_KEY;
 var card = new Array();
 var toCard = (degrees) => {
 card =  ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE','S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
@@ -49,7 +49,7 @@ app.post('/sms', (req, res) => {
   
   else if (req.body.Body.toLowerCase().includes('launch'))
   {
-    request(config.LAUNCH_OPTIONS, (err, response, data) => {
+    request(process.env.LAUNCH_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
       var launchDate = new Date();
       if (data.results[0].status.id == '3') {
@@ -97,7 +97,7 @@ UV Index: ${dsData.daily.data[1].uvIndex}`);
   }
   else if (req.body.Body.toLowerCase().includes('current'))
   {
-    request(config.WU_OPTIONS, (err, response, data) => {
+    request(process.env.WU_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
       var wind = data.observations[0].winddir;
       var windCard = toCard(wind);
@@ -118,7 +118,7 @@ Humidity: ${data.observations[0].humidity}%`);
   }
   else if (req.body.Body.toLowerCase().includes('summary'))
   {
-    request(config.WUSUMMARY_OPTIONS, (err, response, data) => {
+    request(process.env.WUSUMMARY_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
       twiml.message(`
 Today's summary from WU Station ${data.summaries[6].stationID}
