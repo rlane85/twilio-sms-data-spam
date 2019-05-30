@@ -140,5 +140,5 @@ Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
 
 
 http.createServer(app).listen(process.env.PORT, () => {
-  console.log(`Express server listening on port 1337${process.env.PORT}`);
+  console.log(`Express server listening on port ${process.env.PORT}`);
 });
