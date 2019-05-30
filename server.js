@@ -99,7 +99,6 @@ UV Index: ${dsData.daily.data[1].uvIndex}`);
   {
     request(config.WU_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
-      console.log(data);
       var wind = data.observations[0].winddir;
       console.log(wind);
       var windCard = toCard(wind);
