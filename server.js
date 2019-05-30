@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 DarkSkyApi = require('dark-sky-api');
 const config = require('./config');
 const request = require('request');
-DarkSkyApi.apiKey = config.DARKSKY_KEY;
+DarkSkyApi.apiKey = process.env.DARKSKY_KEY;
 var card = new Array();
 var toCard = (degrees) => {
 card =  ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE','S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
