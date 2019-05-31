@@ -77,17 +77,21 @@ Status: ${data.results[success].status.name}
     await DarkSkyApi.loadForecast(position)
       .then((dsData) => {
         var forecastDate = new Date();
+if(req.body.Body.toLowerCase().includes('today'))
+{var forecastDay = 0}
+else 
+{var forecastDay = 1}
         twiml.message(`
-Forecast for ${dateFormat(dsData.daily.data[1].time*1000, "ddd m/d")}:
-${dsData.daily.data[1].summary}
-Sunrise: ${dateFormat(dsData.daily.data[1].sunriseTime*1000, "h:mm")}
-Sunset: ${dateFormat(dsData.daily.data[1].sunsetTime*1000, "h:mm")}
-Moonphase: ${dsData.daily.data[1].moonPhase}
-Temperature: ${dsData.daily.data[1].temperatureLow} - ${dsData.daily.data[0].temperatureHigh}
-Feels Like: ${dsData.daily.data[1].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[1].apparentTemperatureHighTime*1000, "h:mm")})
-Rain Chance: ${dsData.daily.data[1].precipProbability*100}%
-Wind Speed: ${dsData.daily.data[1].windSpeed} mph
-UV Index: ${dsData.daily.data[1].uvIndex}`);
+Forecast for ${dateFormat(dsData.daily.data[forecastDay].time*1000, "ddd m/d")}:
+${dsData.daily.data[forecastDay].summary}
+Sunrise: ${dateFormat(dsData.daily.data[forecastDay].sunriseTime*1000, "h:mm")}
+Sunset: ${dateFormat(dsData.daily.data[forecastDay].sunsetTime*1000, "h:mm")}
+Moonphase: ${dsData.daily.data[forecastDay].moonPhase}
+Temperature: ${dsData.daily.data[forecastDay].temperatureLow} - ${dsData.daily.data[forecastDay].temperatureHigh}
+Feels Like: ${dsData.daily.data[forecastDay].apparentTemperatureLow} - ${dsData.daily.data[forecastDay].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[forecastDay].apparentTemperatureHighTime*1000, "h:mm")})
+Rain Chance: ${dsData.daily.data[forecastDay].precipProbability*100}%
+Wind Speed: ${dsData.daily.data[forecastDay].windSpeed} mph
+UV Index: ${dsData.daily.data[forecastDay].uvIndex}`);
         });
       
     res.end(twiml.toString());
