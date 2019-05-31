@@ -43,7 +43,11 @@ app.post('/sms', (req, res) => {
   }
   else if (req.body.Body.toLowerCase().includes('?'))
   {
-    twiml.message("'Current' for current conditions. 'Summary' for today's summary. Forecast' for tomorrow's info. 'Launch' for upcoming launch info.");
+    twiml.message(`
+'Current' for current conditions. 
+'Summary' for today's summary. 
+'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
+'Launch' for info on the next Space Center launch.`);
     res.end(twiml.toString());
   }
   
@@ -137,7 +141,12 @@ Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
   }
   else
   {
-    twiml.message("Keyword not recognized. 'Current' for current conditions. 'Summary' for today's summary. 'Forecast' for tomorrow's info.");
+    twiml.message(`
+Keyword not recognized. 
+'Current' for current conditions. 
+'Summary' for today's summary. 
+'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
+'Launch' for info on the next Space Center launch.`);
     res.end(twiml.toString());
 
   };
