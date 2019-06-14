@@ -31,16 +31,25 @@ app.post('/sms', (req, res) => {
   res.writeHead(200, {'Content-Type': 'text/xml'});
   console.log(req.body.From);
   console.log(req.body.Body);
+  
+  //hi
+  
   if (req.body.Body.toLowerCase().includes('hello') || req.body.Body.toLowerCase().includes('hi'))
   {
     twiml.message('Hi!');
     res.end(twiml.toString());
   }
+  
+  //bye
+  
   else if (req.body.Body.toLowerCase().includes('bye'))
   {
     twiml.message('Goodbye');
     res.end(twiml.toString());
   }
+  
+  //?
+  
   else if (req.body.Body.toLowerCase().includes('?'))
   {
     twiml.message(`
@@ -51,11 +60,14 @@ app.post('/sms', (req, res) => {
     res.end(twiml.toString());
   }
   
+  //launch
+  
   else if (req.body.Body.toLowerCase().includes('launch'))
   {
     request(config.LAUNCH_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
       var launchDate = new Date();
+      //this endpoint will return launches with status "success"  to avoid that we will look at index 1 if index 0 returns success 
       if (data.results[0].status.id == '3') {
         var success = 1
       }
@@ -75,6 +87,9 @@ Status: ${data.results[success].status.name}
       console.log(twiml.toString());
     });
   }
+  
+  //forecast
+  
   else if (req.body.Body.toLowerCase().includes('forecast'))
   {
     const getInfo = async () => {
@@ -103,6 +118,9 @@ UV Index: ${dsData.daily.data[forecastDay].uvIndex}`);
     }
     getInfo();
   }
+  
+  //current
+  
   else if (req.body.Body.toLowerCase().includes('current'))
   {
     request(config.WU_OPTIONS, (err, response, data) => {
@@ -126,6 +144,9 @@ Humidity: ${data.observations[0].humidity}%`);
 
     });
   }
+  
+  //summary
+  
   else if (req.body.Body.toLowerCase().includes('summary'))
   {
     request(config.WUSUMMARY_OPTIONS, (err, response, data) => {
@@ -139,6 +160,26 @@ Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
       console.log(twiml.toString());
     });
   }
+  
+  //moon
+  
+  else if (req.body.Body.toLowerCase().includes('moon'))
+  {
+    request(config.HERE_OPTIONS, (err, response, data) => {
+      if (err) { return console.log(err); }
+      twiml.message(`
+Current moon phase: ${data.astronomy.astronmy[0].moonPhase*100}%
+${data.astronomy.astronmy[0].moonPhaseDesc}
+Moon Rise:${dateFormat(data.astronomy.astronmy[0].moonRise, "hh:MMT")}
+Moon Set: ${dateFormat(data.astronomy.astronmy[0].moonSet, "hh:MMT")}
+`);
+      res.end(twiml.toString());
+      console.log(twiml.toString());
+    });
+  }
+  
+  //unrecognized
+  
   else
   {
     twiml.message(`
@@ -153,6 +194,7 @@ Keyword not recognized.
 
 });
 
+//create server
 
 http.createServer(app).listen(process.env.PORT, () => {
   console.log(`Express server listening on port ${process.env.PORT}`);

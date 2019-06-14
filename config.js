@@ -46,9 +46,19 @@ const DS_OPTIONS = {
     },
     json: true // Automatically parses the JSON string in the response
 };
+
+const HERE_OPTIONS = {
+    uri: `https://weather.api.here.com/weather/1.0/report.json?name=32935&product=forecast_astronomy&app_id=${process.env.HERE_APPID}&app_code=${process.env.HERE_APPCODE}`,
+        headers: {
+        'User-Agent': 'Request'
+    },
+    json: true // Automatically parses the JSON string in the response
+};
+
 module.exports = {
     WU_OPTIONS,
     WUSUMMARY_OPTIONS,
     LAUNCH_OPTIONS,
     DS_OPTIONS,
+    HERE_OPTIONS
 };
