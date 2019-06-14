@@ -56,7 +56,8 @@ app.post('/sms', (req, res) => {
 'Current' for current conditions. 
 'Summary' for today's summary. 
 'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
-'Launch' for info on the next Space Center launch.`);
+'Launch' for info on the next Space Center launch.
+'Moon' for current moon phase and rise and set.`);
     res.end(twiml.toString());
   }
   
@@ -188,7 +189,8 @@ Keyword not recognized.
 'Current' for current conditions. 
 'Summary' for today's summary. 
 'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
-'Launch' for info on the next Space Center launch.`);
+'Launch' for info on the next Space Center launch.
+'Moon' for current moon phase and rise and set.`);
     res.end(twiml.toString());
 
   };
