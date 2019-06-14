@@ -7,7 +7,7 @@ const config = require('./config');
 const request = require('request');
 DarkSkyApi.apiKey = process.env.DARKSKY_KEY;
 var card = new Array();
-var toCard = (degrees) => {
+function toCard(degrees) {
 card =  ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE','S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
     var index = degrees/22.5;
     return card[index];
