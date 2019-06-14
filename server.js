@@ -171,8 +171,8 @@ Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
       twiml.message(`
 Current moon phase: ${data.astronomy.astronomy[0].moonPhase*100}%
 ${data.astronomy.astronomy[0].moonPhaseDesc}
-Moon Rise: ${dateFormat(data.astronomy.astronomy[0].moonrise, "hh:MMT")}
-Moon Set: ${dateFormat(data.astronomy.astronomy[0].moonset, "hh:MMT")}
+Moon Rise: ${data.astronomy.astronomy[0].moonrise}
+Moon Set: ${data.astronomy.astronomy[0].moonset}
 `);
       res.end(twiml.toString());
       console.log(twiml.toString());
