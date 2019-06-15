@@ -29,8 +29,13 @@ function moonEmoji(phase) {
         break;
     }
     return emoji;
-  }
-
+};
+const keywordString =
+`'Current' for current conditions. 
+'Summary' for today's summary. 
+'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
+'Launch' for info on the next Space Center launch.
+'Moon' for current moon phase and rise and set.`
 const WU_OPTIONS = {
     uri: 'https://api.weather.com/v2/pws/observations/current',
     qs: {
@@ -94,5 +99,6 @@ module.exports = {
     LAUNCH_OPTIONS,
     DS_OPTIONS,
     HERE_OPTIONS,
-    moonEmoji
+    moonEmoji,
+    keywordString
 };

@@ -26,15 +26,15 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/sms', (req, res) => {
-
+  text = req.body.Body.toLowerCase();
   const twiml = new MessagingResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
   console.log(req.body.From);
-  console.log(req.body.Body);
+  console.log(text);
   
   //hi
   
-  if (req.body.Body.toLowerCase().includes('hello') || req.body.Body.toLowerCase().includes('hi'))
+  if (text.includes('hello') || text.includes('hi'))
   {
     twiml.message('Hi!');
     res.end(twiml.toString());
@@ -42,7 +42,7 @@ app.post('/sms', (req, res) => {
   
   //bye
   
-  else if (req.body.Body.toLowerCase().includes('bye'))
+  else if (text.includes('bye'))
   {
     twiml.message('Goodbye');
     res.end(twiml.toString());
@@ -50,24 +50,18 @@ app.post('/sms', (req, res) => {
   
   //?
   
-  else if (req.body.Body.toLowerCase().includes('?'))
+  else if (text.includes('?') || text.includes('keyword'))
   {
-    twiml.message(`
-'Current' for current conditions. 
-'Summary' for today's summary. 
-'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
-'Launch' for info on the next Space Center launch.
-'Moon' for current moon phase and rise and set.`);
+    twiml.message(config.keywordString);
     res.end(twiml.toString());
   }
   
   //launch
   
-  else if (req.body.Body.toLowerCase().includes('launch'))
+  else if (text.includes('launch'))
   {
     request(config.LAUNCH_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
-      var launchDate = new Date();
       //this endpoint will return launches with status "success"  to avoid that we will look at index 1 if index 0 returns success 
       if (data.results[0].status.id == '3') {
         var success = 1
@@ -91,13 +85,12 @@ Status: ${data.results[success].status.name}
   
   //forecast
   
-  else if (req.body.Body.toLowerCase().includes('forecast'))
+  else if (text.includes('forecast'))
   {
     const getInfo = async () => {
     await DarkSkyApi.loadForecast(position)
       .then((dsData) => {
-        var forecastDate = new Date();
-if(req.body.Body.toLowerCase().includes('today'))
+if(text.includes('today'))
 {var forecastDay = 0}
 else 
 {var forecastDay = 1}
@@ -122,7 +115,7 @@ UV Index: ${dsData.daily.data[forecastDay].uvIndex}`);
   
   //current
   
-  else if (req.body.Body.toLowerCase().includes('current'))
+  else if (text.includes('current'))
   {
     request(config.WU_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
@@ -148,7 +141,7 @@ Humidity: ${data.observations[0].humidity}%`);
   
   //summary
   
-  else if (req.body.Body.toLowerCase().includes('summary'))
+  else if (text.includes('summary'))
   {
     request(config.WUSUMMARY_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
@@ -164,7 +157,7 @@ Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
   
   //moon
   
-  else if (req.body.Body.toLowerCase().includes('moon'))
+  else if (text.includes('moon'))
   {
     request(config.HERE_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
@@ -185,15 +178,9 @@ Moon Set: ${data.astronomy.astronomy[0].moonset}
   {
     twiml.message(`
 Keyword not recognized. 
-'Current' for current conditions. 
-'Summary' for today's summary. 
-'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
-'Launch' for info on the next Space Center launch.
-'Moon' for current moon phase and rise and set.`);
+${config.keywordString}`);
     res.end(twiml.toString());
-
   };
-
 });
 
 //create server
