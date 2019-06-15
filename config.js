@@ -93,5 +93,6 @@ module.exports = {
     WUSUMMARY_OPTIONS,
     LAUNCH_OPTIONS,
     DS_OPTIONS,
-    HERE_OPTIONS
+    HERE_OPTIONS,
+    moonEmoji
 };
