@@ -1,3 +1,6 @@
+const chrono = require('chrono-node');
+var dateFormat = require('dateformat');
+
 function moonEmoji(phase) {
     switch(phase) {
       case 'New moon':
@@ -30,6 +33,18 @@ function moonEmoji(phase) {
     }
     return emoji;
 };
+function julianDate(dateWords) {
+    newDate = dateFormat(chrono.parseDate(dateWords), "yyyymmdd");
+    return newDate;
+};
+function msfNewDate(date) {
+    var MSF_OPTIONS = {
+      uri: 'https://' + process.env.MSF_KEY + ':MYSPORTSFEEDS@api.mysportsfeeds.com/v2.1/pull/mlb/2019-regular/date/' + julianDate(date) + '/games.json',
+      headers: {'User-Agent': 'Request' },
+      json: true}
+    return MSF_OPTIONS;
+};
+
 const keywordString =
 `'Current' for current conditions. 
 'Summary' for today's summary. 
@@ -100,5 +115,7 @@ module.exports = {
     DS_OPTIONS,
     HERE_OPTIONS,
     moonEmoji,
-    keywordString
+    keywordString,
+    msfNewDate,
+    julianDate
 };
