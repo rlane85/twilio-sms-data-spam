@@ -168,10 +168,9 @@ Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
   {
     request(config.HERE_OPTIONS, (err, response, data) => {
       if (err) { return console.log(err); }
-      console.log(data.astronomy.astronomy[0].moonPhase);
       twiml.message(`
 Current moon phase: ${data.astronomy.astronomy[0].moonPhase*100}%
-${data.astronomy.astronomy[0].moonPhaseDesc}
+${config.moonEmoji(data.astronomy.astronomy[0].moonPhaseDesc)}${data.astronomy.astronomy[0].moonPhaseDesc}
 Moon Rise: ${data.astronomy.astronomy[0].moonrise}
 Moon Set: ${data.astronomy.astronomy[0].moonset}
 `);
