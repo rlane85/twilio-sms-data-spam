@@ -81,7 +81,7 @@ Status: ${data.results[0].status.name}
   
   else if (text.includes('forecast'))
   {
-    if (chrono.parseDate(text) == null) {
+    if (chrono.parseDate(text) == null) {//if there are no other recognized dates default to today
       request(config.DS_OPTIONS, (err, response, dsData) => {})
       .then(function(dsData) {
       twiml.message(`
@@ -101,8 +101,7 @@ UV Index: ${dsData.daily.data[0].uvIndex}`);
         console.log(twiml.toString());
       })
     }
-    else {
-      console.log(chrono.parseDate(text));
+    else {//set request-promise options to time machine endpoint and pass sms request body to chrono.parseDate to concat into url
       request(config.dsTimeMachine(text), (err, response, dsData) => {})
       .then(function(dsData) {
         twiml.message(`
