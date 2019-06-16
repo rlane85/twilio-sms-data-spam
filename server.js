@@ -125,9 +125,7 @@ powered by darksky.net`);
   {
     request(config.WU_OPTIONS, (err, response, data) => {})
     .then(function(data) {
-    wind = toCard(data.observations[0].winddir)
-    })
-    .then(function(data) {
+    wind = toCard(data.observations[0].winddir);
       twiml.message(`
 Current from WU Station ${data.observations[0].stationID}
 Temp: ${data.observations[0].imperial.temp}
