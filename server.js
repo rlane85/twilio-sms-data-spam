@@ -103,7 +103,7 @@ UV Index: ${dsData.daily.data[0].uvIndex}`);
     }
     else {
       console.log(chrono.parseDate(text));
-      request(config.dsTimeMachine(chrono.parseDate(text)), (err, response, dsData) => {})
+      request(config.dsTimeMachine(text), (err, response, dsData) => {})
       .then(function(dsData) {
         twiml.message(`
 Forecast for ${dateFormat(dsData.daily.data[0].time*1000, "ddd m/d")}:
