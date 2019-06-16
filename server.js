@@ -124,7 +124,7 @@ powered by darksky.net`);
   else if (text.includes('current'))
   {
     request(config.WU_OPTIONS, (err, response, data) => {})
-    .then(function(wind) {
+    .then(function(data) {
     wind = toCard(data.observations[0].winddir)
     })
     .then(function(data) {
