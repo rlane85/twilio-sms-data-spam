@@ -174,7 +174,8 @@ Moon Set: ${data.astronomy.astronomy[0].moonset}
   
 //mysportsfeeds
 
-  else if (text.includes('mlb')) {
+  else if (text.includes('baseball')) 
+  {
     request(config.msfNewDate('today'), (err, response, data) => { })
       .then(function (data) {
         console.log(data.games[0].schedule.id);
@@ -184,6 +185,7 @@ Moon Set: ${data.astronomy.astronomy[0].moonset}
         res.end(twiml.toString());
       })
   }
+
   //unrecognized
   
   else
