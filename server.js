@@ -96,6 +96,10 @@ Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
 Wind Speed: ${dsData.daily.data[0].windSpeed} mph
 UV Index: ${dsData.daily.data[0].uvIndex}`);
       })
+      .then(function() {
+        res.end(twiml.toString());
+        console.log(twiml.toString());
+      })
     }
     else {
       console.log(chrono.parseDate(text));
