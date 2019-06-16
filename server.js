@@ -4,8 +4,8 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const bodyParser = require('body-parser');
 DarkSkyApi = require('dark-sky-api');
 const config = require('./config');
-const request = require('request');
-const rp = require('request-promise');
+//const request = require('request');
+const request = require('request-promise');
 DarkSkyApi.apiKey = process.env.DARKSKY_KEY;
 var card = new Array();
 function toCard(degrees) {
@@ -61,16 +61,16 @@ app.post('/sms', (req, res) => {
   
   else if (text.includes('launch'))
   {
-    request(config.LAUNCH_OPTIONS, (err, response, data) => {
-      if (err) { return console.log(err); }
-      //this endpoint will return launches with status "success"  to avoid that we will look at index 1 if index 0 returns success 
-      if (data.results[0].status.id == '3') {
-        var success = 1
-      }
-      else {
-        var success = 0
-      };
-
+    request(config.LAUNCH_OPTIONS, (err, response, data) => {})
+      .then(function(data) {//this endpoint will return launches with status "success"  to avoid that we will look at index 1 if index 0 returns success 
+        if (data.results[0].status.id == '3') {
+          var success = 1
+        }
+        else {
+          var success = 0
+        };
+      })
+      .then(function(data) {
       twiml.message(`
 Next launch at Cape Canaveral, FL: ${dateFormat(data.results[success].net, "ddd m/d 'at' h:MM t")}
 Rocket: ${data.results[success].rocket.configuration.name}
@@ -78,7 +78,8 @@ Launch Agency: ${data.results[success].rocket.configuration.launch_service_provi
 Mission: ${data.results[success].mission.name}
 Status: ${data.results[success].status.name}
 `);
-
+      })
+      .then(function() {
       res.end(twiml.toString());
       console.log(twiml.toString());
     });
@@ -118,12 +119,14 @@ UV Index: ${dsData.daily.data[forecastDay].uvIndex}`);
   
   else if (text.includes('current'))
   {
-    request(config.WU_OPTIONS, (err, response, data) => {
-      if (err) { return console.log(err); }
+    request(config.WU_OPTIONS, (err, response, data) => {})
+    .then(function(data) {
       var wind = data.observations[0].winddir;
       console.log(wind);
       var windCard = toCard(wind);
       console.log(windCard);
+    })
+    .then(function(data) {
       twiml.message(`
 Current from WU Station ${data.observations[0].stationID}
 Temp: ${data.observations[0].imperial.temp}
@@ -133,41 +136,44 @@ Wind Direction: ${windCard}(${data.observations[0].winddir})
 Rain Today: ${data.observations[0].imperial.precipTotal} inches
 Pressure: ${data.observations[0].imperial.pressure} inHg
 Humidity: ${data.observations[0].humidity}%`);
-
+    })
+    .then(function() {
       res.end(twiml.toString());
       console.log(twiml.toString());
-
-    });
+    })
   }
   
   //summary
   
   else if (text.includes('summary'))
   {
-    request(config.WUSUMMARY_OPTIONS, (err, response, data) => {
-      if (err) { return console.log(err); }
-      twiml.message(`
+    request(config.WUSUMMARY_OPTIONS, (err, response, data) => {})
+    .then(function(data) {
+     twiml.message(`
 Today's summary from WU Station ${data.summaries[6].stationID}
 Heat index high: ${data.summaries[6].imperial.heatindexHigh}
 Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph 
-`);
+`)
+    })
+    .then(function() {
       res.end(twiml.toString());
       console.log(twiml.toString());
-    });
+    })
   }
   
   //moon
   
   else if (text.includes('moon'))
   {
-    rp(config.HERE_OPTIONS, (err, response, data) => {})
-      .then(function(data) {
+    request(config.HERE_OPTIONS, (err, response, data) => {})
+    .then(function(data) {
         twiml.message(`
 Current moon phase: ${data.astronomy.astronomy[0].moonPhase*100}%
 ${config.moonEmoji(data.astronomy.astronomy[0].moonPhaseDesc)}${data.astronomy.astronomy[0].moonPhaseDesc}
 Moon Rise: ${data.astronomy.astronomy[0].moonrise}
 Moon Set: ${data.astronomy.astronomy[0].moonset}
-`)    })
+`)   
+    })
       .then(function() {
       res.end(twiml.toString());
       console.log(twiml.toString());
@@ -178,7 +184,7 @@ Moon Set: ${data.astronomy.astronomy[0].moonset}
 
   else if (text.includes('baseball')) 
   {
-    rp(config.msfNewDate('today'), (err, response, data) => { })
+    request(config.msfNewDate('today'), (err, response, data) => { })
       .then(function (data) {
         console.log(data.games[0].schedule.id);
         twiml.message(data.games[0].schedule.id);
