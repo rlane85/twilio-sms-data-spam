@@ -1,41 +1,22 @@
 const chrono = require('chrono-node');
 var dateFormat = require('dateformat');
 
-function moonEmoji(phase) {
-    switch(phase) {
-      case 'New moon':
-        emoji = '🌑';
-        break;
-      case 'Waxing crescent':
-        emoji = '🌒';
-        break;
-      case 'First Quarter':
-        emoji = '🌓';
-        break;
-      case 'Waxing gibbous':
-        emoji = '🌔';
-        break;
-      case 'Full moon':
-        emoji = '🌕';
-        break;
-      case 'Waning gibbous':
-        emoji = '🌖';
-        break;
-      case 'Last Quarter':
-        emoji = '🌗';
-        break;
-      case 'Waning crescent':
-        emoji = '🌘';
-        break;
-      default:
-        emoji = '';
-        break;
-    }
-    return emoji;
-};
 function julianDate(dateWords) {
     newDate = dateFormat(chrono.parseDate(dateWords), "yyyymmdd");
     return newDate;
+};
+function dsTimeMachine(date) {
+  var dsTimeOptions = {
+    uri: `https://api.darksky.net/forecast/${process.env.DARKSKY_KEY}/${process.env.DARKSKY_LATLONG},${chrono.parseDate(date).getTime() / 1000}`,
+    qs: {
+      exclude: 'minutely&hourly&flags',
+  },
+      headers: {
+      'User-Agent': 'Request'
+  },
+   json: true
+  };
+  return dsTimeOptions;
 };
 function msfNewDate(date) {
     var MSF_OPTIONS = {
@@ -43,6 +24,38 @@ function msfNewDate(date) {
       headers: {'User-Agent': 'Request' },
       json: true}
     return MSF_OPTIONS;
+};
+function moonEmoji(phase) {
+  switch(phase) {
+    case 'New moon':
+      emoji = '🌑';
+      break;
+    case 'Waxing crescent':
+      emoji = '🌒';
+      break;
+    case 'First Quarter':
+      emoji = '🌓';
+      break;
+    case 'Waxing gibbous':
+      emoji = '🌔';
+      break;
+    case 'Full moon':
+      emoji = '🌕';
+      break;
+    case 'Waning gibbous':
+      emoji = '🌖';
+      break;
+    case 'Last Quarter':
+      emoji = '🌗';
+      break;
+    case 'Waning crescent':
+      emoji = '🌘';
+      break;
+    default:
+      emoji = '';
+      break;
+  }
+  return emoji;
 };
 
 const keywordString =
@@ -97,7 +110,7 @@ const DS_OPTIONS = {
         headers: {
         'User-Agent': 'Request'
     },
-    json: true // Automatically parses the JSON string in the response
+    json: true
 };
 
 const HERE_OPTIONS = {
@@ -117,5 +130,6 @@ module.exports = {
     moonEmoji,
     keywordString,
     msfNewDate,
-    julianDate
+    julianDate,
+    dsTimeMachine
 };

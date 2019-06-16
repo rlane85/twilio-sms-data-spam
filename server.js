@@ -4,7 +4,7 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const bodyParser = require('body-parser');
 DarkSkyApi = require('dark-sky-api');
 const config = require('./config');
-//const request = require('request');
+const chrono = require('chrono-node');
 const request = require('request-promise');
 DarkSkyApi.apiKey = process.env.DARKSKY_KEY;
 var card = new Array();
@@ -81,32 +81,45 @@ Status: ${data.results[0].status.name}
   
   else if (text.includes('forecast'))
   {
-    const getInfo = async () => {
-    await DarkSkyApi.loadForecast(position)
-      .then((dsData) => {
-if(text.includes('today'))
-{var forecastDay = 0}
-else 
-{var forecastDay = 1}
-        twiml.message(`
-Forecast for ${dateFormat(dsData.daily.data[forecastDay].time*1000, "ddd m/d")}:
-${dsData.daily.data[forecastDay].summary}
-Sunrise: ${dateFormat(dsData.daily.data[forecastDay].sunriseTime*1000, "h:mm")}
-Sunset: ${dateFormat(dsData.daily.data[forecastDay].sunsetTime*1000, "h:mm")}
-Moonphase: ${dsData.daily.data[forecastDay].moonPhase}
-Temperature: ${dsData.daily.data[forecastDay].temperatureLow} - ${dsData.daily.data[forecastDay].temperatureHigh}
-Feels Like: ${dsData.daily.data[forecastDay].apparentTemperatureLow} - ${dsData.daily.data[forecastDay].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[forecastDay].apparentTemperatureHighTime*1000, "h:mm")})
-Rain Chance: ${dsData.daily.data[forecastDay].precipProbability*100}%
-Wind Speed: ${dsData.daily.data[forecastDay].windSpeed} mph
-UV Index: ${dsData.daily.data[forecastDay].uvIndex}`);
-        });
-      
-    res.end(twiml.toString());
-    console.log(twiml.toString());
+    if (chrono.parseDate(text) == null) {
+      request(config.DS_OPTIONS, (err, response, dsData) => {})
+      .then(function(dsData) {
+      twiml.message(`
+Forecast for ${dateFormat(dsData.daily.data[0].time*1000, "ddd m/d")}:
+${dsData.daily.data[0].summary}
+Sunrise: ${dateFormat(dsData.daily.data[0].sunriseTime*1000, "h:mm")}
+Sunset: ${dateFormat(dsData.daily.data[0].sunsetTime*1000, "h:mm")}
+Moonphase: ${dsData.daily.data[0].moonPhase}
+Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].temperatureHigh}
+Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
+Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
+Wind Speed: ${dsData.daily.data[0].windSpeed} mph
+UV Index: ${dsData.daily.data[0].uvIndex}`);
+      })
     }
-    getInfo();
+    else {
+      console.log(chrono.parseDate(text));
+      request(config.dsTimeMachine(chrono.parseDate(text)), (err, response, dsData) => {})
+      .then(function(dsData) {
+        twiml.message(`
+Forecast for ${dateFormat(dsData.daily.data[0].time*1000, "ddd m/d")}:
+${dsData.daily.data[0].summary}
+Sunrise: ${dateFormat(dsData.daily.data[0].sunriseTime*1000, "h:mm")}
+Sunset: ${dateFormat(dsData.daily.data[0].sunsetTime*1000, "h:mm")}
+Moonphase: ${dsData.daily.data[0].moonPhase}
+Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].temperatureHigh}
+Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
+Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
+Wind Speed: ${dsData.daily.data[0].windSpeed} mph
+UV Index: ${dsData.daily.data[0].uvIndex}`);
+        })
+        .then(function() {
+          res.end(twiml.toString());
+          console.log(twiml.toString());
+        })  
+    }    
   }
-  
+ 
   //current
   
   else if (text.includes('current'))
@@ -196,3 +209,29 @@ ${config.keywordString}`);
 http.createServer(app).listen(process.env.PORT, () => {
   console.log(`Express server listening on port ${process.env.PORT}`);
 });
+/*
+    const getInfo = async () => {
+    await DarkSkyApi.loadForecast(position)
+      .then((dsData) => {
+if(text.includes('today'))
+{var 0 = 0}
+else 
+{var 0 = 1}
+        twiml.message(`
+Forecast for ${dateFormat(dsData.daily.data[0].time*1000, "ddd m/d")}:
+${dsData.daily.data[0].summary}
+Sunrise: ${dateFormat(dsData.daily.data[0].sunriseTime*1000, "h:mm")}
+Sunset: ${dateFormat(dsData.daily.data[0].sunsetTime*1000, "h:mm")}
+Moonphase: ${dsData.daily.data[0].moonPhase}
+Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].temperatureHigh}
+Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
+Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
+Wind Speed: ${dsData.daily.data[0].windSpeed} mph
+UV Index: ${dsData.daily.data[0].uvIndex}`);
+        });
+      
+    res.end(twiml.toString());
+    console.log(twiml.toString());
+    }
+    getInfo();
+*/
