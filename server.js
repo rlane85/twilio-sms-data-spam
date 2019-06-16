@@ -113,20 +113,12 @@ UV Index: ${dsData.daily.data[forecastDay].uvIndex}`);
   {
     request(config.WU_OPTIONS, (err, response, data) => {})
     .then(function(data) {
-      var wind = data.observations[0].winddir;
-      console.log(wind)
-    })
-    .then(function(wind) {
-      var windCard = toCard(wind);
-      console.log(windCard);
-    })
-    .then(function(data) {
       twiml.message(`
 Current from WU Station ${data.observations[0].stationID}
 Temp: ${data.observations[0].imperial.temp}
 Heat Index: ${data.observations[0].imperial.heatIndex}
 Wind Speed: ${data.observations[0].imperial.windSpeed} mph
-Wind Direction: ${windCard}(${data.observations[0].winddir})
+Wind Direction: ${toCard(data.observations[0].winddir)}(${data.observations[0].winddir})
 Rain Today: ${data.observations[0].imperial.precipTotal} inches
 Pressure: ${data.observations[0].imperial.pressure} inHg
 Humidity: ${data.observations[0].humidity}%`);
