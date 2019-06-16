@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 DarkSkyApi = require('dark-sky-api');
 const config = require('./config');
 const request = require('request');
+const rp = require('request-promise');
 DarkSkyApi.apiKey = process.env.DARKSKY_KEY;
 var card = new Array();
 function toCard(degrees) {
@@ -176,7 +177,7 @@ Moon Set: ${data.astronomy.astronomy[0].moonset}
 
   else if (text.includes('baseball')) 
   {
-    request(config.msfNewDate('today'), (err, response, data) => { })
+    rp(config.msfNewDate('today'), (err, response, data) => { })
       .then(function (data) {
         console.log(data.games[0].schedule.id);
         twiml.message(data.games[0].schedule.id);
