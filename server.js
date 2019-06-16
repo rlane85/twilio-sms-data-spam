@@ -62,14 +62,6 @@ app.post('/sms', (req, res) => {
   else if (text.includes('launch'))
   {
     request(config.LAUNCH_OPTIONS, (err, response, data) => {})
-      .then(function(data) {//this endpoint will return launches with status "success"  to avoid that we will look at index 1 if index 0 returns success 
-        if (data.results[0].status.id == '3') {
-          var success = 1
-        }
-        else {
-          var success = 0
-        };
-      })
       .then(function(data) {
       twiml.message(`
 Next launch at Cape Canaveral, FL: ${dateFormat(data.results[success].net, "ddd m/d 'at' h:MM t")}
@@ -122,7 +114,9 @@ UV Index: ${dsData.daily.data[forecastDay].uvIndex}`);
     request(config.WU_OPTIONS, (err, response, data) => {})
     .then(function(data) {
       var wind = data.observations[0].winddir;
-      console.log(wind);
+      console.log(wind)
+    })
+    .then(function(windCard) {
       var windCard = toCard(wind);
       console.log(windCard);
     })
