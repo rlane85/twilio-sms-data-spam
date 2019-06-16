@@ -2,11 +2,10 @@ const http = require('http');
 const express = require('express');
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const bodyParser = require('body-parser');
-DarkSkyApi = require('dark-sky-api');
 const config = require('./config');
 const chrono = require('chrono-node');
 const request = require('request-promise');
-DarkSkyApi.apiKey = process.env.DARKSKY_KEY;
+
 var card = new Array();
 function toCard(degrees) {
 card =  ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE','S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW', 'N'];
@@ -14,18 +13,13 @@ card =  ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE','S', 'SSW', 'SW', 'WSW
     return card[index];
 };
 var dateFormat = require('dateformat');
-const position = {
-  latitude: 28.11439905797519, 
-  longitude: -80.65110467074518
-};
-DarkSkyApi.proxy = true; 
 process.on('unhandledRejection', (reason, promise) => {
   console.log('Unhandled Rejection at:', reason.stack || reason)
 })
 const app = express();
-
 app.use(bodyParser.urlencoded({ extended: true }));
 
+//configure app functions on /sms path
 app.post('/sms', (req, res) => {
   text = req.body.Body.toLowerCase();
   const twiml = new MessagingResponse();
@@ -94,7 +88,8 @@ Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].tem
 Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
 Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
 Wind Speed: ${dsData.daily.data[0].windSpeed} mph
-UV Index: ${dsData.daily.data[0].uvIndex}`);
+UV Index: ${dsData.daily.data[0].uvIndex}
+powered by darksky.net`);
       })
       .then(function() {
         res.end(twiml.toString());
@@ -114,7 +109,8 @@ Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].tem
 Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
 Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
 Wind Speed: ${dsData.daily.data[0].windSpeed} mph
-UV Index: ${dsData.daily.data[0].uvIndex}`);
+UV Index: ${dsData.daily.data[0].uvIndex}
+powered by darksky.net`);
         })
         .then(function() {
           res.end(twiml.toString());
@@ -150,7 +146,7 @@ Humidity: ${data.observations[0].humidity}%`);
   else if (text.includes('summary'))
   {
     request(config.WUSUMMARY_OPTIONS, (err, response, data) => {})
-    .then(function(data) {
+    .then(function(data) {//index 6 is today
      twiml.message(`
 Today's summary from WU Station ${data.summaries[6].stationID}
 Heat index high: ${data.summaries[6].imperial.heatindexHigh}
@@ -212,29 +208,3 @@ ${config.keywordString}`);
 http.createServer(app).listen(process.env.PORT, () => {
   console.log(`Express server listening on port ${process.env.PORT}`);
 });
-/*
-    const getInfo = async () => {
-    await DarkSkyApi.loadForecast(position)
-      .then((dsData) => {
-if(text.includes('today'))
-{var 0 = 0}
-else 
-{var 0 = 1}
-        twiml.message(`
-Forecast for ${dateFormat(dsData.daily.data[0].time*1000, "ddd m/d")}:
-${dsData.daily.data[0].summary}
-Sunrise: ${dateFormat(dsData.daily.data[0].sunriseTime*1000, "h:mm")}
-Sunset: ${dateFormat(dsData.daily.data[0].sunsetTime*1000, "h:mm")}
-Moonphase: ${dsData.daily.data[0].moonPhase}
-Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].temperatureHigh}
-Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
-Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
-Wind Speed: ${dsData.daily.data[0].windSpeed} mph
-UV Index: ${dsData.daily.data[0].uvIndex}`);
-        });
-      
-    res.end(twiml.toString());
-    console.log(twiml.toString());
-    }
-    getInfo();
-*/
