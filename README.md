@@ -6,6 +6,6 @@ clone or download
 
 `npm install`
 
-API keys and twillio access tokens and more precise LatLong for dark sky query are configured with process.env variables named in config.js
+API keys, twillio access tokens, and lat/long are configured with process.env variables named in config.js
 
 `node server`
