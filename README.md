@@ -6,6 +6,6 @@ clone or download
 
 `npm install`
 
-configTemplate.js needs to be updated with personal API keys and twillio access tokens and more precise LatLong for dark sky query and renamed to config.js
+API keys and twillio access tokens and more precise LatLong for dark sky query are configured with process.env variables named in config.js
 
 `node server`
