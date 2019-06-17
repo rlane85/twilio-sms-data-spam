@@ -61,9 +61,9 @@ function moonEmoji(phase) {
 const keywordString =
 `'Current' for current conditions. 
 'Summary' for today's summary. 
-'Forecast' for tomorrow's info. You can also include either 'today' or 'tomorrow' (default)
+'Forecast' for tomorrow's info. Will attempt to recognize a specific day/date in your request (e.g. "forecast for next thursday."
 'Launch' for info on the next Space Center launch.
-'Moon' for current moon phase and rise and set.`
+'Moon' for current moon phase and rise and set. Now with emoji!`
 const WU_OPTIONS = {
     uri: 'https://api.weather.com/v2/pws/observations/current',
     qs: {

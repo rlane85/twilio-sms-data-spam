@@ -83,7 +83,7 @@ Forecast for ${dateFormat(dsData.daily.data[0].time*1000, "ddd m/d")}:
 ${dsData.daily.data[0].summary}
 Sunrise: ${dateFormat(dsData.daily.data[0].sunriseTime*1000, "h:mm")}
 Sunset: ${dateFormat(dsData.daily.data[0].sunsetTime*1000, "h:mm")}
-Moonphase: ${dsData.daily.data[0].moonPhase}
+Moonphase: ${round(dsData.daily.data[0].moonPhase)*100}
 Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].temperatureHigh}
 Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
 Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
@@ -104,7 +104,7 @@ Forecast for ${dateFormat(dsData.daily.data[0].time*1000, "ddd m/d")}:
 ${dsData.daily.data[0].summary}
 Sunrise: ${dateFormat(dsData.daily.data[0].sunriseTime*1000, "h:mm")}
 Sunset: ${dateFormat(dsData.daily.data[0].sunsetTime*1000, "h:mm")}
-Moonphase: ${dsData.daily.data[0].moonPhase}
+Moonphase: ${round(dsData.daily.data[0].moonPhase)*100}
 Temperature: ${dsData.daily.data[0].temperatureLow} - ${dsData.daily.data[0].temperatureHigh}
 Feels Like: ${dsData.daily.data[0].apparentTemperatureLow} - ${dsData.daily.data[0].apparentTemperatureHigh} (at ${dateFormat(dsData.daily.data[0].apparentTemperatureHighTime*1000, "h:mm")})
 Rain Chance: ${dsData.daily.data[0].precipProbability*100}%
@@ -167,7 +167,7 @@ Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
     request(config.HERE_OPTIONS, (err, response, data) => {})
     .then(function(data) {
         twiml.message(`
-Current moon phase: ${data.astronomy.astronomy[0].moonPhase*100}%
+Current moon phase: ${round(data.astronomy.astronomy[0].moonPhase*100)}%
 ${config.moonEmoji(data.astronomy.astronomy[0].moonPhaseDesc)}${data.astronomy.astronomy[0].moonPhaseDesc}
 Moon Rise: ${data.astronomy.astronomy[0].moonrise}
 Moon Set: ${data.astronomy.astronomy[0].moonset}
