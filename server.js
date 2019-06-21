@@ -25,6 +25,7 @@ app.post('/sms', (req, res) => {
   const twiml = new MessagingResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
   console.log(req.body.From);
+  console.log(req.body);
   console.log(text);
   
   //hi
