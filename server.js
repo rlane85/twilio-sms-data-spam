@@ -58,12 +58,14 @@ app.post('/sms', (req, res) => {
   {
     request(config.LAUNCH_OPTIONS, (err, response, data) => {})
       .then(function(data) {
+        if (data.results[0].status.id==6 || data.results[0].status.id==3){success = 1}
+        else {success=0}
       twiml.message(`
-Next launch at Cape Canaveral, FL: ${dateFormat(data.results[0].net, "ddd m/d 'at' h:MM t")}
-Rocket: ${data.results[0].rocket.configuration.name}
-Launch Agency: ${data.results[0].rocket.configuration.launch_service_provider}
-Mission: ${data.results[0].mission.name}
-Status: ${data.results[0].status.name}
+Next launch at Cape Canaveral, FL: ${dateFormat(data.results[success].net, "ddd m/d 'at' h:MM t")}
+Rocket: ${data.results[success].rocket.configuration.name}
+Launch Agency: ${data.results[success].rocket.configuration.launch_service_provider}
+Mission: ${data.results[success].mission.name}
+Status: ${data.results[success].status.name}
 `);
       })
       .then(function() {
