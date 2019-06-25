@@ -149,14 +149,14 @@ Humidity: ${data.observations[0].humidity}%`);
   {
     request(config.WUSUMMARY_OPTIONS, (err, response, data) => {})
     .then(function(data) {//index 6 is today
-     wind = toCard(data.summaries[6].imperial.winddirAvg);
+     wind = toCard(data.summaries[6].winddirAvg);
      twiml.message(`
 Today's summary from WU Station ${data.summaries[6].stationID}
 Temperature high: ${data.summaries[6].imperial.tempHigh}
 Heat index high: ${data.summaries[6].imperial.heatindexHigh}
 Wind gust high: ${data.summaries[6].imperial.windgustHigh} mph
 Wind speed average: ${data.summaries[6].imperial.windspeedAvg} mph
-Average wind direction: ${wind} (${data.summaries[6].imperial.winddirAvg})
+Average wind direction: ${wind} (${data.summaries[6].winddirAvg})
 Precipitation total: ${data.summaries[6].imperial.precipTotal} inches of rain
 `)
     })
