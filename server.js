@@ -32,7 +32,7 @@ app.post('/sms', (req, res) => {
   
   if (text.includes('hello') || text.includes('hi'))
   {
-    twiml.message('Hi!');
+    twiml.message('Hey there!');
     res.end(twiml.toString());
   }
   
