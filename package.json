@@ -22,7 +22,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "chrono-node": "^1.3.11",
+    "chrono-node": "^2.2.4",
     "dark-sky-api": "^0.6.32",
     "dateformat": "^3.0.3",
     "express": "^4.17.0",
